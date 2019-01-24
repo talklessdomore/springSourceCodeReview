@@ -241,7 +241,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		/**
 		 * 取回实际beanName
 		 * 处理一：1.有可能去除&
-		 * 		 2.有可能是别名需要去除
+		 * 		 2.有可能是别名需要去除(map别名对应规范名)
 		 */
 		final String beanName = transformedBeanName(name);
 		//定义返回实体对象
@@ -266,6 +266,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 			//返回对应的实例
+			/**
+			 * 1.判断当前beanName引用方式是否是想获取工厂类
+			 * 		是判断当前bean是否空实现实例返回
+			 * 		如果不是工厂类型bean报错
+			 * 2.如果该bean不是工厂实例，并且该beanName应用是工厂类型的引用直接返回
+			 * 3.接下来可以说明该bean是工厂类型
+			 * 		首先从工厂缓存factoryBeanObjectCache中获取
+			 * 		如果为空从该bean的工厂类getObject中获取
+			 */
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
@@ -1688,7 +1697,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		//在缓存中加载工厂bean
 		Object object = null;
 		if (mbd == null) {
-			//由FactoryBean创建的单例对象的缓存:FactoryBean名称到对象
+			//由FactoryBean创建的单例对象的缓存:FactoryBean名称到对象。factoryBeanObjectCache
 			object = getCachedObjectForFactoryBean(beanName);
 		}
 		if (object == null) {
