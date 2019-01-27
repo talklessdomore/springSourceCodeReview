@@ -511,41 +511,49 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
 		synchronized (this.startupShutdownMonitor) {
-			// Prepare this context for refreshing.
+			// 准备刷新的上下文环境
+			/**
+			 * 对系统属性和环境变量初始化验证
+			 */
 			prepareRefresh();
 
-			// Tell the subclass to refresh the internal bean factory.
+			// 初始化beanFactory,并进行对xml文件进行读取
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
-			// Prepare the bean factory for use in this context.
+			// 对beanFactory进行各种功能的补充
 			prepareBeanFactory(beanFactory);
 
 			try {
-				// Allows post-processing of the bean factory in context subclasses.
+				// 子类覆盖方法做额外处理
 				postProcessBeanFactory(beanFactory);
 
-				// Invoke factory processors registered as beans in the context.
+				// 激活各种beanFactory处理器
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// Register bean processors that intercept bean creation.
+				// 注册拦截bean创建的bean处理器，这里只是注册，真正调用是在getBean的时候
 				registerBeanPostProcessors(beanFactory);
 
-				// Initialize message source for this context.
+				// 为上下文初始化message源，即不同语言的消息体，国际化处理
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				//初始化应用消息广播器并放入“applicationEvenMulticaster”中
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				//留给子类来初始化其他bean
 				onRefresh();
 
 				// Check for listener beans and register them.
+				//在所有的bean中找listener Bean将其注册到消息广播器中
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				//初始化剩下的单实例
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				//完成刷新过程，通知生命周期处理器lifeCycleProcessor刷新过程，同事发出contextRefreshEvent通知别人
 				finishRefresh();
 			}
 
@@ -577,6 +585,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Prepare this context for refreshing, setting its startup date and
 	 * active flag as well as performing any initialization of property sources.
 	 */
+	/**
+	 * 主要对系统属性和环境变量的初始化及验证
+	 */
 	protected void prepareRefresh() {
 		this.startupDate = System.currentTimeMillis();
 		this.closed.set(false);
@@ -592,10 +603,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		}
 
 		// Initialize any placeholder property sources in the context environment
+		//留给子类覆盖
 		initPropertySources();
 
 		// Validate that all properties marked as required are resolvable
 		// see ConfigurablePropertyResolver#setRequiredProperties
+		//验证所需要的属性文件是否都已经放入环境中
 		getEnvironment().validateRequiredProperties();
 
 		// Allow for the collection of early ApplicationEvents,
@@ -619,7 +632,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		//初始化beanFactory并读取xml文件，并将得到的beanFactory记录在当前实体的属性中
 		refreshBeanFactory();
+		//返回当前实体的beanFactory属性
 		return getBeanFactory();
 	}
 
