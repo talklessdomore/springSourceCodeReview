@@ -77,6 +77,12 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see #initBeanDefinitionReader
 	 * @see #loadBeanDefinitions
 	 */
+	/**
+	 * 使用xmlBeanDefinitionReader的loadDefintions方法进行配置文件的加载和注册，这完全是beanFactory的套路，
+	 * 因为在xmlBeanDefinitionReader已经将之前的DefaultListableBeanFactory注册进去了，所以xmlBeanDefinitionReader
+	 * 所读取的BeanDefinitionHolder都会注册到DefaultListableBeanFactory,也就经过此步骤DefaultListableBeanFactory的变量
+	 * beanFactory包含了所有解析好的配置信息
+	 */
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
