@@ -645,11 +645,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	/**
 	 *增添功能
-	 * 1.增加了对aspectJ的支持
+	 * 1.增加了对spel语言的支持
 	 * 2.增加了对属性编辑器的支持
 	 * 3.增加了一些内置类比如对EnvironmentAware和MessageSourceAware的信息注入
 	 * 4.设置了依赖功能可忽略接口
-	 * 5.设置一些
+	 * 5.注册一些固定依赖的属性
+	 * 6.增加aspectj支持
+	 * 7.将相关环境变量和属性注册以单例模式注册
 	 * @param beanFactory
 	 */
 	protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
