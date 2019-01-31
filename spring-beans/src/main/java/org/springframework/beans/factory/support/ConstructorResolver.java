@@ -118,6 +118,7 @@ class ConstructorResolver {
 			@Nullable Constructor<?>[] chosenCtors, @Nullable Object[] explicitArgs) {
 
 		BeanWrapperImpl bw = new BeanWrapperImpl();
+		//使用注册的自定义编辑器初始化给定的BeanWrapper
 		this.beanFactory.initBeanWrapper(bw);
 
 		Constructor<?> constructorToUse = null;
