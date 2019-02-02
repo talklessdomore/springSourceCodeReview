@@ -126,12 +126,13 @@ public abstract class AopConfigUtils {
 				int currentPriority = findPriorityForClass(apcDefinition.getBeanClassName());
 				int requiredPriority = findPriorityForClass(cls);
 				if (currentPriority < requiredPriority) {
+					//设置bean对应的className属性
 					apcDefinition.setBeanClassName(cls.getName());
 				}
 			}
 			return null;
 		}
-
+		//如果已经存在自动代理创建器并且与将要创建的一致则无需创建
 		RootBeanDefinition beanDefinition = new RootBeanDefinition(cls);
 		beanDefinition.setSource(source);
 		beanDefinition.getPropertyValues().add("order", Ordered.HIGHEST_PRECEDENCE);

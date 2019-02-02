@@ -64,6 +64,10 @@ public class BeanFactoryAdvisorRetrievalHelper {
 	 * @return the list of {@link org.springframework.aop.Advisor} beans
 	 * @see #isEligibleBean
 	 */
+	/**
+	 * 找到当前bean工厂中所有合格的Advisor bean，
+	 * 忽略factorybean并排除当前正在创建的bean
+	 */
 	public List<Advisor> findAdvisorBeans() {
 		// Determine list of advisor bean names, if not cached already.
 		String[] advisorNames = this.cachedAdvisorBeanNames;

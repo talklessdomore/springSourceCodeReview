@@ -101,6 +101,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 	}
 
 	/**
+	 * 找到所有候选人顾问使用在自动代理
 	 * Find all candidate Advisors to use in auto-proxying.
 	 * @return the List of candidate Advisors
 	 */
@@ -123,6 +124,7 @@ public abstract class AbstractAdvisorAutoProxyCreator extends AbstractAutoProxyC
 
 		ProxyCreationContext.setCurrentProxiedBeanName(beanName);
 		try {
+			//过滤已经得到的advisors
 			return AopUtils.findAdvisorsThatCanApply(candidateAdvisors, beanClass);
 		}
 		finally {
