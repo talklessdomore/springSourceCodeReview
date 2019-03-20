@@ -296,7 +296,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	@Override
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
-			//根据给定的bean的class和name构建出个key;格式：beanClassName_beanName
+			//根据给定的bean的class和name构建出个key;如果是工厂就是&name
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
 			if (!this.earlyProxyReferences.contains(cacheKey)) {
 				//如果它适合配代理，则需要封装指定的bean
@@ -451,7 +451,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 */
 	protected Object createProxy(Class<?> beanClass, @Nullable String beanName,
 			@Nullable Object[] specificInterceptors, TargetSource targetSource) {
-
+		//记录代理目标class
 		if (this.beanFactory instanceof ConfigurableListableBeanFactory) {
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
@@ -463,12 +463,13 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 		 *决定对给定的bean是否使用targetClass，而不是他的接口代理
 		 *检查proxyTargetClass设置以及presserveTargetClass属性
 		 */
+		//介质代理方式，使用的就是cglib代理方式
 		if (!proxyFactory.isProxyTargetClass()) {
 			if (shouldProxyTargetClass(beanClass, beanName)) {
 				proxyFactory.setProxyTargetClass(true);
 			}
 			else {
-				//添加代理接口
+				//添加代理接口，普通代理方式
 				evaluateProxyInterfaces(beanClass, proxyFactory);
 			}
 		}

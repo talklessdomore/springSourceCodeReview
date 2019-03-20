@@ -81,7 +81,7 @@ public abstract class AopNamespaceUtils {
 		//注册或升级autoProxyCreator定义beanName为org.springFrameWork.aop.config.internalAutoProxyCreator的BeanDefinition
 		BeanDefinition beanDefinition = AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(
 				parserContext.getRegistry(), parserContext.extractSource(sourceElement));
-		//对于proxy-target-class以及expose-proxy属性的处理
+		//对于proxy-target-class{是否使用cglib代理}以及expose-proxy属性的处理{是否暴露代理，即在方法间调用的时候都会代理}
 		useClassProxyingIfNecessary(parserContext.getRegistry(), sourceElement);
 		//注册组件并通知，便于监听器做进一步处理
 		//其中beanDefinition的className为AnnotationAwareAspectJAutoProxyCreator

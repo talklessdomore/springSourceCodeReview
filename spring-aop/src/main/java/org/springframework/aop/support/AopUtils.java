@@ -242,7 +242,7 @@ public abstract class AopUtils {
 			classes.add(ClassUtils.getUserClass(targetClass));
 		}
 		classes.addAll(ClassUtils.getAllInterfacesForClassAsSet(targetClass));
-
+		//遍历接口中所有定义的方法，通过MethodMatcher进行匹配
 		for (Class<?> clazz : classes) {
 			Method[] methods = ReflectionUtils.getAllDeclaredMethods(clazz);
 			for (Method method : methods) {
@@ -280,9 +280,11 @@ public abstract class AopUtils {
 	 * @return whether the pointcut can apply on any method
 	 */
 	public static boolean canApply(Advisor advisor, Class<?> targetClass, boolean hasIntroductions) {
+		//引介增强是通过设置ClassFilter进行匹配
 		if (advisor instanceof IntroductionAdvisor) {
 			return ((IntroductionAdvisor) advisor).getClassFilter().matches(targetClass);
 		}
+		//普通增强
 		else if (advisor instanceof PointcutAdvisor) {
 			PointcutAdvisor pca = (PointcutAdvisor) advisor;
 			return canApply(pca.getPointcut(), targetClass, hasIntroductions);

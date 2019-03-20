@@ -1667,32 +1667,25 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected Object getObjectForBeanInstance(
 			Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
 
-		// 判断当前name是否是工厂引用类型的形如{"&beanName"}
+		// 这里面是工厂引用，所需要的是一个工厂，对工厂条件的一种过滤，如果为空或者说该bean不是工厂实例则过滤掉，即直接返回
 		if (BeanFactoryUtils.isFactoryDereference(name)) {
-			//如果是则是否是空实例bean如果是直接返回
+			//如果该工厂为空则直接返回
 			if (beanInstance instanceof NullBean) {
 				return beanInstance;
 			}
-			//如果不是工厂类型报错
+			//如果该beanInstance不是工厂实例则抛异常
 			if (!(beanInstance instanceof FactoryBean)) {
 				throw new BeanIsNotAFactoryException(transformedBeanName(name), beanInstance.getClass());
 			}
 		}
 
-
-		//BeanFactoryUtils.isFactoryDereference(name)这个是上一步判断条件，只有为false才能进入下一个条件
-		//所以这里只要判断第一个条件就行了
-		//如果不是工厂类型的直接返回
+		//根据上面一层的过滤，如果说我们的beanInstance不是工厂bean或者想要获取的是工厂bean{这里面的工厂bean是不为空的}直接返回
 		if (!(beanInstance instanceof FactoryBean) || BeanFactoryUtils.isFactoryDereference(name)) {
 			return beanInstance;
 		}
 		/**
-		 * 上面两步：如果该bean的name获取类型是&beanname类型的并且是空实现直接返回
-		 * 		   如果该bean不是工厂类型也是直接返回的
-		 * 下面一步：则可以知道是工厂了，那首先从缓存中获取该bean如果没有
-		 * 		   则是从该工厂中获取了
+		 * 根据上面两层走下来，可以确定它是工厂类，并且它想获取的是它的实例object，而非工厂实例
 		 */
-
 		//到这里可以证明该bean是个工厂bean
 		//在缓存中加载工厂bean
 		Object object = null;

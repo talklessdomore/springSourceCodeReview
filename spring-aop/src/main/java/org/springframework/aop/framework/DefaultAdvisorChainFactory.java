@@ -46,7 +46,10 @@ import org.springframework.lang.Nullable;
  */
 @SuppressWarnings("serial")
 public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializable {
-
+	/*
+	对于@Aspect注解配置类中，@Before、@After、@AfterThrowing配置的增强会被包装为AspectJMethodBeforeAdvice、AspectJAfterReturningAdvice、AspectJAfterThrowingAdvice等，
+	在这一步骤中，这些Advice会分别被封装为MethodBeforeAdviceInterceptor、AfterReturningAdviceInterceptor、ThrowsAdviceInterceptor拦截器。
+	 */
 	@Override
 	public List<Object> getInterceptorsAndDynamicInterceptionAdvice(
 			Advised config, Method method, @Nullable Class<?> targetClass) {
@@ -58,7 +61,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 		List<Object> interceptorList = new ArrayList<>(advisors.length);
 		Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
 		Boolean hasIntroductions = null;
-
+		//遍历增强器
 		for (Advisor advisor : advisors) {
 			if (advisor instanceof PointcutAdvisor) {
 				// Add it conditionally.
@@ -90,6 +93,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 					}
 				}
 			}
+			//对于引介增强的处理
 			else if (advisor instanceof IntroductionAdvisor) {
 				IntroductionAdvisor ia = (IntroductionAdvisor) advisor;
 				if (config.isPreFiltered() || ia.getClassFilter().matches(actualClass)) {
